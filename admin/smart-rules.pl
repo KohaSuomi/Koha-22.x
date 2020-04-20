@@ -114,6 +114,7 @@ if ($op eq 'delete') {
                 recall_due_date_interval         => undef,
                 recall_overdue_fine              => undef,
                 recall_shelf_time                => undef,
+                holds_pickup_period              => undef,
             }
         }
     );
@@ -293,6 +294,7 @@ elsif ($op eq 'add') {
     my $recall_due_date_interval = $input->param('recall_due_date_interval');
     my $recall_overdue_fine = $input->param('recall_overdue_fine');
     my $recall_shelf_time = $input->param('recall_shelf_time');
+    my $holds_pickup_period = strip_non_numeric( scalar $input->param('holds_pickup_period') );
 
     my $rules = {
         maxissueqty                   => $maxissueqty,
@@ -333,6 +335,7 @@ elsif ($op eq 'add') {
         recall_due_date_interval      => $recall_due_date_interval,
         recall_overdue_fine           => $recall_overdue_fine,
         recall_shelf_time             => $recall_shelf_time,
+        holds_pickup_period           => $holds_pickup_period,
     };
 
     Koha::CirculationRules->set_rules(
