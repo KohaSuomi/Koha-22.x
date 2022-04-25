@@ -55,7 +55,7 @@ legend:hover {
                 [% IF (borrower_data.firstname || borrower_data.surname ) %]
                     <li>
                         <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% borrowernumber | uri %]">
-                            [% INCLUDE 'patron-title.inc' %]
+                            [% INCLUDE 'patron-title.inc' no_html = 1 %]
                         </a>
                     </li>
                 [% END %]
@@ -476,7 +476,7 @@ legend:hover {
                                                             [% IF patron_category.category_type == 'I' %]
                                                                 <li class="guarantor-details" data-borrowernumber="[% r.guarantor_id | $raw %]">
                                                                     <span class="label">Organization:</span>
-                                                                    [% INCLUDE 'patron-title.inc' patron=r.guarantor hide_patron_infos_if_needed=1 %]
+                                                                    [% INCLUDE 'patron-title.inc' patron=r.guarantor %]
                                                                 </li>
                                                                 <li>
                                                                     <span class="label">Relationship:</span>
@@ -485,7 +485,7 @@ legend:hover {
                                                             [% ELSE %]
                                                                 <li class="guarantor-details" data-borrowernumber="[% r.guarantor_id | $raw %]">
                                                                     <span class="label">Guarantor:</span>
-                                                                    [% INCLUDE 'patron-title.inc' patron=r.guarantor hide_patron_infos_if_needed=1 %]
+                                                                    [% INCLUDE 'patron-title.inc' patron=r.guarantor %]
                                                                 </li>
                                                                 <li>
                                                                     <span class="label">Relationship:</span>

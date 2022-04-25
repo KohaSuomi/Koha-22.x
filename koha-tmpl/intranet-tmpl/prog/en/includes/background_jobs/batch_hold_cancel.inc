@@ -29,7 +29,7 @@
             [% SWITCH m.code %]
             [% CASE 'hold_not_cancelled' %]
                 [% IF m.biblio && m.patron %]
-                    <span>Hold on <a href="/cgi-bin/koha/reserve/request.pl?biblionumber=[% m.biblio.biblionumber | uri %]">[% m.biblio.title | html %]</a> for <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% m.patron.borrowernumber | uri %]">[% INCLUDE 'patron-title.inc' patron=m.patron %]</a> has not been cancelled.</span>
+                    <span>Hold on <a href="/cgi-bin/koha/reserve/request.pl?biblionumber=[% m.biblio.biblionumber | uri %]">[% m.biblio.title | html %]</a> for <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% m.patron.borrowernumber | uri %]">[% INCLUDE 'patron-title.inc' patron=m.patron no_html = 1 %]</a> has not been cancelled.</span>
                 [% END %]
                 <span>An error occurred on cancelling.</span>
                 [% SWITCH m.error %]
@@ -39,7 +39,7 @@
                 [% END %]
             [% CASE 'hold_cancelled' %]
                 [% biblio_link = BLOCK %]<a href="/cgi-bin/koha/reserve/request.pl?biblionumber=[% m.biblio_id | uri %]">[% m.biblio.title | html %]</a>[% END %]
-                [% patron_link = BLOCK %]<a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% m.patron_id | uri %]">[% INCLUDE 'patron-title.inc' patron=m.patron %]</a>[% END %]
+                [% patron_link = BLOCK %]<a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% m.patron_id | uri %]">[% INCLUDE 'patron-title.inc' patron=m.patron no_html = 1 %]</a>[% END %]
                 <span>Hold on [% biblio_link | $raw | $KohaSpan %] for [% patron_link | $raw | $KohaSpan %] has successfully been cancelled.</span>
             [% END %]
         </div>
