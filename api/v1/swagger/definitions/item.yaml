@@ -228,7 +228,7 @@ properties:
       - object
       - "null"
     description: A return claims object if one exists that's unresolved
-additionalProperties: false
+additionalProperties: true
 required:
   - item_id
   - biblio_id
