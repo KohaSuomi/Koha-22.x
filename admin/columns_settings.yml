@@ -1544,7 +1544,7 @@ modules:
             -
               columnname: copies
             -
-              columnname: enumeration
+              columnname: issues
             -
               columnname: itemtypes
             -
