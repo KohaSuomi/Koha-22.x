@@ -104,6 +104,17 @@ elsif ( $op eq 'add_validate' ) {
         # Force a default record
         $content ||= '<!-- no_content -->' if $lang eq 'default';
 
+        # Deny forbidden tags (KD-4348)
+        for my $checkfields ($title, $content) {
+            for ( 'style', 'script', 'link', 'iframe', 'applet' ) {
+                if ( lc ( $checkfields ) =~ /<\/{0,1}\Q$_\E.*>/ ) {
+                    $success = 0;
+                    push @messages, { type => 'error', code => 'error_on_insert' };
+                    last;
+                } 
+            }
+        }
+        last unless $success;
         my $additional_content = Koha::AdditionalContents->find(
             {
                 category   => $category,
