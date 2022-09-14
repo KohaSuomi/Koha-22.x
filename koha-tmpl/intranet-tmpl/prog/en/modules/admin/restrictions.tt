@@ -113,6 +113,22 @@
                         <input type="text" value="[% restriction.display_text | html %]" name="display_text" id="display_text" size="50" maxlength="50" class="required" required="required" />
                         <span class="required">Required</span>
                     </li>
+                    <li>
+                        <label for="lift_after_payment" class="required">Lift after payment: </label>
+                        <select type="text" name="lift_after_payment" id="lift_after_payment"/>
+                        [% IF restriction.lift_after_payment %]
+                            <option value="0">No</option>
+                            <option value="1" selected="selected">Yes</option>
+                        [% ELSE %]
+                            <option value="0" selected="selected">No</option>
+                            <option value="1">Yes</option>
+                        [% END %]
+                        </select>
+                    </li>
+                    <li>
+                        <label for="fee_limit">Fee limit: </label>
+                        <input type="text" value="[% restriction.fee_limit | html %]" inputmode="decimal" pattern="^\d+(\.\d{2})?$" min="0" name="fee_limit" id="fee_limit" />
+                    </li>
                 [% ELSE %]
                     <li>
                         <label for="code" class="required">Code: </label>
@@ -123,6 +139,17 @@
                         <label for="display_text" class="required">Label: </label>
                         <input type="text" name="display_text" id="display_text" size="50" maxlength="50" class="required" required="required" />
                         <span class="required">Required</span>
+                    </li>
+                    <li>
+                        <label for="lift_after_payment">Lift after payment: </label>
+                        <select type="text" name="lift_after_payment" id="lift_after_payment" />
+                            <option value="0" selected="selected">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label for="fee_limit">Fee limit: </label>
+                        <input type="text" inputmode="decimal" pattern="^\d+(\.\d{2})?$" min="0" name="fee_limit" id="fee_limit" />
                     </li>
                 [% END %]
             </ol>
@@ -172,6 +199,8 @@
                         <th scope="col">Code</th>
                         <th scope="col">Label</th>
                         <th scope="col">Default</th>
+                        <th scope="col">Lift after payment?</th>
+                        <th scope="col">Fee limit</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -186,6 +215,12 @@
                             </td>
                             <td>
                                 [% IF restriction.is_default %]Yes[% END %]
+                            </td>
+                            <td>
+                                [% IF restriction.lift_after_payment %]Yes[% END %]
+                            </td>
+                            <td>
+                                [% IF restriction.fee_limit %][% restriction.fee_limit %][% END %]
                             </td>
                             <td class="actions">
                                 <a class="btn btn-default btn-xs" href="/cgi-bin/koha/admin/restrictions.pl?op=add_form&amp;code=[% restriction.code | uri %]"><i class="fa fa-pencil"></i> Edit</a>
@@ -228,6 +263,15 @@
             [% ex.code | $raw %]: '[% ex.display_text | $raw %]',
         [% END %]
         };
+
+        //Require fee limit if "Lift after payment" is set true
+        $("#lift_after_payment").on("change", function(){
+            if($(this).val() == 1){
+                $("#fee_limit").prop("required",true).after('<span class="required">Required</span>');
+            } else {
+                $("#fee_limit").prop("required",false).nextAll().remove();
+            }
+        });
     </script>
     [% Asset.js("js/restrictiontypes.js") | $raw %]
 [% END %]

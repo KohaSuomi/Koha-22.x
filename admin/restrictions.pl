@@ -54,6 +54,8 @@ if ( $op eq 'add_form') {
 } elsif ( $op eq 'add_validate' ) {
 
     my $display_text = $input->param('display_text');
+    my $lift_after_payment = $input->param('lift_after_payment');
+    my $fee_limit = $input->param('fee_limit');
     my $is_a_modif = $input->param("is_a_modif");
 
     if ($is_a_modif) {
@@ -61,13 +63,15 @@ if ( $op eq 'add_form') {
         my $dupe = Koha::Patron::Restriction::Types->find({
             display_text => $display_text
         });
-        if ($dupe) {
+        if ($dupe && $dupe->unblessed->{code} ne $code) {
             push @messages, {
                 type => 'error', code => 'duplicate_display_text'
             };
         } else {
             my $restriction = Koha::Patron::Restriction::Types->find($code);
             $restriction->display_text($display_text);
+            $restriction->lift_after_payment($lift_after_payment);
+            $restriction->fee_limit($fee_limit);
             $restriction->store;
             push @messages, { type => 'message', code => 'update_success' };
         }
@@ -81,7 +85,9 @@ if ( $op eq 'add_form') {
         } else {
             my $restriction = Koha::Patron::Restriction::Type->new({
                 code => $code,
-                display_text => $display_text
+                display_text => $display_text,
+                lift_after_payment => $lift_after_payment,
+                fee_limit => $fee_limit
             });
             $restriction->store;
             push @messages, { type => 'message', code => 'add_success' };
