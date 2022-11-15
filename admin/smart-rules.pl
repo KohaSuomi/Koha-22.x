@@ -115,6 +115,7 @@ if ($op eq 'delete') {
                 recall_overdue_fine              => undef,
                 recall_shelf_time                => undef,
                 holds_pickup_period              => undef,
+                decreaseloanholds                => undef,
             }
         }
     );
