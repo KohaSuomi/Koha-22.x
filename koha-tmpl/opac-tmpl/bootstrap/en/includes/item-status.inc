@@ -7,23 +7,44 @@
 [%#- structure is used by course reserves pages, which do -%]
 [%#- not use an API to fetch items that populates item.datedue. -%]
 
+[% UNLESS item.isa('Koha::Item') %]
+    <div>Programming error, item-status.inc must be called with a Koha::Item object.<div>
+    [% STOP %]
+[% END %]
+
+[% SET transfer = item.get_transfer %]
+[% IF transfer AND transfer.in_transit %]
+    [% SET transfertwhen = transfer.datesent %]
+    [% SET transfertfrom = transfer.frombranch %]
+    [% SET transfertto = transfer.tobranch %]
+[% END %]
+
+[% SET waiting = item.holds.waiting.count %]
+[% IF include_schema_org %]
+    [% IF item.damaged or item.checkout.date_due or item.itemlost or transfertwhen or waiting %]
+        <link property="availability" href="http://schema.org/OutOfStock" />
+    [% ELSIF item.withdrawn %]
+        <link property="availability" href="http://schema.org/Discontinued" />
+    [% ELSIF item.notforloan or item.itemtype.notforloan %]
+        <link property="availability" href="http://schema.org/InStoreOnly" />
+    [% ELSE %]
+        <link property="availability" href="http://schema.org/InStock" />
+    [% END %]
+[% END %]
+
 [% IF ( item.itemlost ) %]
     [% SET itemavailable = 0 %]
-    [% av_lib_include = AuthorisedValues.GetDescriptionByKohaField( kohafield => 'items.itemlost', authorised_value => item.itemlost, opac => 1 ) %]
-    [% IF ( av_lib_include ) %]
-        <span class="item-status lost">[% av_lib_include | html %]</span>
+    [% itemlost_lib = AuthorisedValues.GetDescriptionByKohaField( kohafield => 'items.itemlost', authorised_value => item.itemlost, opac => 1 ) %]
+    [% IF itemlost_lib %]
+        <span class="item-status lost">[% itemlost_lib | html %]</span>
     [% ELSE %]
         <span class="item-status lost">Item lost</span>
     [% END %]
 [% END %]
 
-[% IF item.isa('Koha::Item') %]
-    [% SET datedue = item.checkout.date_due %]
-    [% SET onsite_checkout = item.checkout.onsite_checkout %]
-[% ELSE %]
-    [% SET datedue = item.datedue || issue.date_due %]
-    [% SET onsite_checkout = item.onsite_checkout %]
-[% END %]
+[% SET datedue = item.checkout.date_due %]
+[% SET onsite_checkout = item.checkout.onsite_checkout %]
+
 [% IF datedue %]
     [% SET itemavailable = 0 %]
     [% IF onsite_checkout %]
@@ -39,54 +60,47 @@
             <span class="item-status checkedout">Checked out</span>
         [% END %]
     [% END %]
-    [%# FIXME We should move avail_for_recall to a Koha::Item method %]
-    [% IF !item.isa('Koha::Item') AND item.avail_for_recall %]<a href="/cgi-bin/koha/opac-recall.pl?biblionumber=[% item.biblionumber | uri %]" class="btn btn-default btn-xs">Recall</a>[% END %]
+    [% IF show_recall_link %]
+        [% IF datedue && logged_in_user.borrowernumber != issue.borrowernumber %]
+            <a href="/cgi-bin/koha/opac-recall.pl?biblionumber=[% item.biblionumber | uri %]" class="btn btn-default btn-xs">Recall</a>
+        [% END %]
+    [% END %]
 [% END %]
 
-[% IF item.isa('Koha::Item') %]
-    [% SET transfer = item.get_transfer %]
-    [% IF transfer AND transfer.in_transit %]
-        [% SET transfertwhen = transfer.datesent %]
-        [% SET transfertfrom = transfer.frombranch %]
-        [% SET transfertto = transfer.tobranch %]
-    [% END %]
-[% ELSE %]
-        [% SET transfertwhen = item.transfertwhen %]
-        [% SET transfertfrom = item.transfertfrom %]
-        [% SET transfertto = item.transfertto %]
-[% END %]
 [% IF transfertwhen %] [%# transfertwhen is set in C4::Search, do not have it for course reserves %]
     [% SET itemavailable = 0 %]
     <span class="item-status intransit">In transit from [% Branches.GetName( transfertfrom ) | html %]
     to [% Branches.GetName( transfertto ) | html %] since [% transfertwhen | $KohaDates %]</span>
 [% END %]
 
-[% IF (item.isa('Koha::Item') AND item.holds.waiting.count) OR (item.isa('Koha::Item') AND item.holds.processing.count) OR (NOT item.isa('Koha::Item') AND item.waiting) OR (NOT item.isa('Koha::Item') AND item.processing) %]
+[% IF waiting OR item.holds.processing.count %]
     [% SET itemavailable = 0 %]
     <span class="item-status onhold">On hold</span>
 [% END %]
 
 [% IF ( item.withdrawn ) %]
     [% SET itemavailable = 0 %]
-    [% av_lib_include = AuthorisedValues.GetDescriptionByKohaField( kohafield => 'items.withdrawn', authorised_value => item.withdrawn, opac => 1 ) %]
-    [% IF av_lib_include %]
-        <span class="item-status withdrawn">[% av_lib_include | html %]</span>
+    [% withdrawn_lib = AuthorisedValues.GetDescriptionByKohaField( kohafield => 'items.withdrawn', authorised_value => item.withdrawn, opac => 1 ) %]
+    [% IF withdrawn_lib %]
+        <span class="item-status withdrawn">[% withdrawn_lib | html %]</span>
     [% ELSE %]
         <span class="item-status withdrawn">Item withdrawn</span>
     [% END %]
 [% END %]
 
 
-[% IF NOT ( item.isa('Koha::Item') ) AND item.itemnotforloan %]
+[% SET restricted_lib = AuthorisedValues.GetDescriptionByKohaField( kohafield => 'items.withdrawn', authorised_value => item.withdrawn, opac => 1 ) %]
+[% IF item.notforloan %]
     [% SET itemavailable = 0 %]
-    [% IF ( item.notforloanvalueopac ) %]
-        <span class="item-status notforloan">[% item.notforloanvalueopac | html %] [% IF ( item.restrictedvalueopac ) %]<span class="restricted">([% item.restrictedvalueopac | html %])</span>[% END %]</span>
+    [% notforloan_lib = AuthorisedValues.GetDescriptionByKohaField( kohafield => 'items.withdrawn', authorised_value => item.withdrawn, opac => 1 ) %]
+    [% IF notforloan_lib %]
+        <span class="item-status notforloan">[% notforloan_lib | html %] [% IF restricted_lib %]<span class="restricted">([% restricted_lib | html %])</span>[% END %]</span>
     [% ELSE %]
-        <span class="item-status notforloan">Not for loan [% IF ( item.restrictedvalueopac ) %]<span class="restricted">([% item.restrictedvalueopac | html %])</span>[% END %]</span>
+        <span class="item-status notforloan">Not for loan [% IF restricted_lib %]<span class="restricted">([% restricted_lib | html %])</span>[% END %]</span>
     [% END %]
-[% ELSIF NOT ( item.isa('Koha::Item') ) AND item.notforloan_per_itemtype %]
+[% ELSIF item.itemtype.notforloan %]
     [% SET itemavailable = 0 %]
-    <span class="item-status notforloan">Not for loan [% IF ( item.restrictedvalueopac ) %]<span class="restricted">([% item.restrictedvalueopac | html %])</span>[% END %]</span>
+    <span class="item-status notforloan">Not for loan [% IF restricted_lib %]<span class="restricted">([% restricted_lib | html %])</span>[% END %]</span>
 [% END %]
 
 [% IF ( item.bundle_host ) %]
@@ -103,7 +117,7 @@
     [% END %]
 [% END %]
 
-[% IF Koha.Preference('OPACAcquisitionDetails') AND ( item.isa('Koha::Item') ) AND ( item.orders.filter_by_active.count ) %]
+[% IF Koha.Preference('OPACAcquisitionDetails') AND item.orders.filter_by_active.count %]
     [% SET itemavailable = 0 %]
     <span class="item-status onorder">On order</span>
 [% END %]
@@ -119,6 +133,5 @@
 [% END %]
 
 [% IF ( itemavailable ) %]
-    [% IF NOT item.isa('Koha::Item') %][% SET restrictedvalueopac = item.restrictedvalueopac %][% END %]
-    <span class="item-status available">Available [% IF restrictedvalueopac %]<span class="restricted">([% restrictedvalueopac | html %])</span>[% END %]</span>
+    <span class="item-status available">Available [% IF restricted_lib %]<span class="restricted">([% restricted_lib | html %])</span>[% END %]</span>
 [% END %]

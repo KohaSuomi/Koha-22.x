@@ -44,15 +44,6 @@ die("No course_id given") unless ($course_id);
 my $course = GetCourse($course_id);
 my $course_reserves = GetCourseReserves( course_id => $course_id, include_items => 1, include_count => 1 );
 
-if ( C4::Context->preference('UseRecalls') ) {
-    foreach my $cr ( @$course_reserves ) {
-        if ( $cr->{issue}->{date_due} and $cr->{issue}->{borrowernumber} and $borrowernumber != $cr->{issue}->{borrowernumber} ) {
-            $cr->{course_item}->{avail_for_recall} = 1;
-            $cr->{course_item}->{biblionumber} = Koha::Items->find( $cr->{itemnumber} )->biblionumber;
-        }
-    }
-}
-
 $template->param(
     course          => $course,
     course_reserves => $course_reserves,
