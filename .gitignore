@@ -6,3 +6,12 @@ node_modules/
 koha-tmpl/opac-tmpl/bootstrap/css/maps/
 koha-tmpl/intranet-tmpl/prog/css/maps/
 koha-tmpl/intranet-tmpl/prog/js/vue/dist/
+Koha/Schema/Result
+installer/data/mysql/fi-FI/
+koha-tmpl/opac-tmpl/bootstrap/fi-FI/
+koha-tmpl/intranet-tmpl/prog/fi-FI/
+installer/data/mysql/sv-SE/
+koha-tmpl/opac-tmpl/bootstrap/sv-SE/
+koha-tmpl/intranet-tmpl/prog/sv-SE/
+misc/translator/po/fi-FI-*
+misc/translator/po/sv-SE-*
