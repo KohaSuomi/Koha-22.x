@@ -604,7 +604,11 @@ function registerFrameworkPluginHandler(name, eventType, handler) {
 }
 $(document).ready(function() {
     function callPluginEventHandler (event) {
-        event.preventDefault();
+        // Prevent "jump to top"
+        if (event.type === 'click') {
+            event.preventDefault();
+        }
+
         event.stopPropagation();
 
         const plugin = event.target.getAttribute('data-plugin');
