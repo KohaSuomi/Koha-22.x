@@ -110,11 +110,17 @@ my $guarantor = undef;
 $guarantor = Koha::Patrons->find( $guarantor_id ) if $guarantor_id;
 $template->param( guarantor => $guarantor );
 
-my @delete_guarantor = $input->multi_param('delete_guarantor');
-foreach my $id ( @delete_guarantor ) {
-    my $r = Koha::Patron::Relationships->find( $id );
-    $r->delete() if $r;
+#Search existing guarantor id(s) and new ones from params
+my @guarantors;
+my @new_guarantor_ids = grep { $_ ne '' } $input->multi_param('new_guarantor_id');
+
+foreach my $new_guarantor_id (@new_guarantor_ids) {
+    my $new_guarantor = Koha::Patrons->find( { borrowernumber => $new_guarantor_id } );
+    push @guarantors, $new_guarantor;
 }
+
+my @existing_guarantors = $patron->guarantor_relationships()->guarantors->as_list unless !$patron;
+push @guarantors, @existing_guarantors;
 
 ## Deal with debarments
 $template->param(
@@ -263,6 +269,36 @@ if ( ( $op eq 'insert' ) and !$nodouble ) {
             push( @new_guarantors, $g );
         }
         $template->param( new_guarantors => \@new_guarantors );
+    }
+}
+
+#Attempt to delete guarantors
+my @delete_guarantor = $input->multi_param('delete_guarantor');
+if(@delete_guarantor){
+    if ( C4::Context->preference('ChildNeedsGuarantor')
+        && scalar @guarantors - scalar @delete_guarantor == 0 ) {
+        push @errors, 'ERROR_cannot_delete_guarantor';
+    } else {
+        foreach my $id ( @delete_guarantor ) {
+            my $r = Koha::Patron::Relationships->find( $id );
+            $r->delete() if $r;
+        }
+    }
+}
+
+#Check if guarantor requirements are met
+my $valid_guarantor = @guarantors ? @guarantors : $newdata{'contactname'};
+if ( ( $op eq 'save' || $op eq 'insert' )
+    && C4::Context->preference('ChildNeedsGuarantor')
+    && ( $category->category_type eq 'C' || $category->can_be_guarantee )
+    && !$valid_guarantor )
+{
+    push @errors, 'ERROR_child_no_guarantor';
+}
+
+foreach my $guarantor (@guarantors) {
+    if ( ( $op eq 'save' || $op eq 'insert' ) && $guarantor->is_child || $guarantor->category->can_be_guarantee ) {
+        push @errors, 'ERROR_guarantor_is_guarantee';
     }
 }
 
@@ -429,7 +465,7 @@ if ((!$nok) and $nodouble and ($op eq 'insert' or $op eq 'save')){
 	if ($op eq 'insert'){
 		# we know it's not a duplicate borrowernumber or there would already be an error
         delete $newdata{password2};
-        $patron = eval { Koha::Patron->new(\%newdata)->store };
+        $patron = eval { Koha::Patron->new(\%newdata)->store({ guarantors => \@guarantors }) };
         if ( $@ ) {
             # FIXME Urgent error handling here, we cannot fail without relevant feedback
             # Lot of code will need to be removed from this script to handle exceptions raised by Koha::Patron->store
@@ -515,7 +551,7 @@ if ((!$nok) and $nodouble and ($op eq 'insert' or $op eq 'save')){
         delete $newdata{password2};
 
         eval {
-            $patron->set(\%newdata)->store if scalar(keys %newdata) > 1; # bug 4508 - avoid crash if we're not
+            $patron->set(\%newdata)->store({ guarantors => \@guarantors }) if scalar(keys %newdata) > 1; # bug 4508 - avoid crash if we're not
                                                                     # updating any columns in the borrowers table,
                                                                     # which can happen if we're only editing the
                                                                     # patron attributes or messaging preferences sections
