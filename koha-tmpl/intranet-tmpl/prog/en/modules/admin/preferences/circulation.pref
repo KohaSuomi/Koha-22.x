@@ -673,8 +673,8 @@ Circulation:
         -
             - pref: EnableItemGroups
               choices:
-                  yes: Enable
-                  no: "Don't enable"
+                  1: Enable
+                  0: "Don't enable"
             - the item groups feature to allow collecting groups of items on a record together.
         -
             - In the staff interface, split the holds queue into separate tables by
@@ -688,8 +688,8 @@ Circulation:
         -
             - pref: EnableItemGroupHolds
               choices:
-                  yes: Enable
-                  no: "Don't enable"
+                  1: Enable
+                  0: "Don't enable"
             - the ability to place holds on item groups.
         -
             - If the holds queue is split, show librarians
@@ -761,7 +761,7 @@ Circulation:
               choices:
                   ItemHomeLibrary: "item's home library"
                   PatronLibrary: "patron's home library"
-            - to see if the patron can place a hold on the item.    
+            - to see if the patron can place a hold on the item.
         -
             - Mark a hold as problematic if it has been waiting for more than
             - pref: ReservesMaxPickUpDelay
@@ -1214,7 +1214,7 @@ Circulation:
               choices:
                   1: Allow
                   0: "Don't allow"
-            - patrons to return items through web-based self checkout system. 
+            - patrons to return items through web-based self checkout system.
         -
             - "Include the following HTML in the Help page of the web-based self checkout system:"
             - pref: SelfCheckHelpMessage
