@@ -7,6 +7,7 @@
   xmlns:str="http://exslt.org/strings"
   exclude-result-prefixes="marc str">
     <xsl:import href="MARC21slimUtils.xsl"/>
+    <xsl:import href="kohasuomi-MARC21slimUtils.xsl"/>
     <xsl:output method = "html" indent="yes" omit-xml-declaration = "yes" encoding="UTF-8"/>
 
     <xsl:template match="/">
@@ -32,6 +33,7 @@
         <xsl:variable name="leader7" select="substring($leader,8,1)"/>
         <xsl:variable name="leader19" select="substring($leader,20,1)"/>
         <xsl:variable name="biblionumber" select="marc:datafield[@tag=999]/marc:subfield[@code='c']"/>
+        <xsl:variable name="controlField003" select="marc:controlfield[@tag=003]"/>
         <xsl:variable name="controlField008" select="marc:controlfield[@tag=008]"/>
         <xsl:variable name="typeOf008">
             <xsl:choose>
@@ -103,175 +105,172 @@
                 </xsl:when>
             </xsl:choose>
 
-            <xsl:variable name="controlField007" select="marc:controlfield[@tag=007]"/>
-            <xsl:variable name="cf007ss11" select="substring($controlField007,1,1)"/>
-            <xsl:variable name="cf007ss21" select="substring($controlField007,2,1)"/>
-            <xsl:if test="$cf007ss11 = 'c' and $cf007ss21 = 'b'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='c'][substring(text(),2,1)='b']">
                 chip cartridge
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'c' and $cf007ss21 = 'j'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='c'][substring(text(),2,1)='j']">
                 magnetic disc
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'c' and $cf007ss21 = 'm'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='c'][substring(text(),2,1)='m']">
                 magneto-optical disc
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'c' and $cf007ss21 = 'r'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='c'][substring(text(),2,1)='r']">
 		available online
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'c' and $cf007ss21 = 'a'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='c'][substring(text(),2,1)='a']">
                 tape cartridge
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'c' and $cf007ss21 = 'f'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='c'][substring(text(),2,1)='f']">
                 tape cassette
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'c' and $cf007ss21 = 'f'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='c'][substring(text(),2,1)='h']">
                 tape reel
             </xsl:if>
 
-            <xsl:if test="$cf007ss11 = 'o' and $cf007ss21 = 'o'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='o'][substring(text(),2,1)='o']">
                 kit
             </xsl:if>
 
-            <xsl:if test="$cf007ss11 = 'a' and $cf007ss21 = 'd'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='a'][substring(text(),2,1)='d']">
                 atlas
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'a' and $cf007ss21 = 'g'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='a'][substring(text(),2,1)='g']">
                 diagram
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'a' and $cf007ss21 = 'j'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='a'][substring(text(),2,1)='j']">
                 map
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'a' and $cf007ss21 = 'q'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='a'][substring(text(),2,1)='q']">
                 model
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'a' and $cf007ss21 = 'k'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='a'][substring(text(),2,1)='k']">
                 profile
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'a' and $cf007ss21 = 'r'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='a'][substring(text(),2,1)='r']">
                 remote-sensing image
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'a' and $cf007ss21 = 's'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='a'][substring(text(),2,1)='s']">
                 section
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'a' and $cf007ss21 = 'y'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='a'][substring(text(),2,1)='y']">
                 view
             </xsl:if>
 
-            <xsl:if test="$cf007ss11 = 'h' and $cf007ss21 = 'a'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='h'][substring(text(),2,1)='a']">
                 aperture card
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'h' and $cf007ss21 = 'e'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='h'][substring(text(),2,1)='e']">
                 microfiche
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'h' and $cf007ss21 = 'f'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='h'][substring(text(),2,1)='f']">
                 microfiche cassette
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'h' and $cf007ss21 = 'b'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='h'][substring(text(),2,1)='b']">
                 microfilm cartridge
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'h' and $cf007ss21 = 'c'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='h'][substring(text(),2,1)='c']">
                 microfilm cassette
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'h' and $cf007ss21 = 'd'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='h'][substring(text(),2,1)='d']">
                 microfilm reel
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'h' and $cf007ss21 = 'g'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='h'][substring(text(),2,1)='g']">
                 microopaque
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'm' and $cf007ss21 = 'c'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='m'][substring(text(),2,1)='c']">
                 film cartridge
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'm' and $cf007ss21 = 'f'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='m'][substring(text(),2,1)='f']">
                 film cassette
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'm' and $cf007ss21 = 'r'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='m'][substring(text(),2,1)='r']">
                 film reel
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'k' and $cf007ss21 = 'c'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='k'][substring(text(),2,1)='c']">
                 collage
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'k' and $cf007ss21 = 'f'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='k'][substring(text(),2,1)='f']">
                 photomechanical print
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'k' and $cf007ss21 = 'g'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='k'][substring(text(),2,1)='g']">
                 photonegative
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'k' and $cf007ss21 = 'h'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='k'][substring(text(),2,1)='h']">
                 photoprint
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'k' and $cf007ss21 = 'j'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='k'][substring(text(),2,1)='j']">
                 print
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'k' and $cf007ss21 = 'l'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='k'][substring(text(),2,1)='l']">
                 technical drawing
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'g' and $cf007ss21 = 'd'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='g'][substring(text(),2,1)='d']">
                 filmslip
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'g' and $cf007ss21 = 'c'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='g'][substring(text(),2,1)='c']">
                 filmstrip cartridge
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'g' and $cf007ss21 = 'o'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='g'][substring(text(),2,1)='o']">
                 filmstrip roll
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'g' and $cf007ss21 = 'f'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='g'][substring(text(),2,1)='f']">
                 other filmstrip type
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'g' and $cf007ss21 = 't'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='g'][substring(text(),2,1)='t']">
                 transparency
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'r' and $cf007ss21 = 'r'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='r'][substring(text(),2,1)='r']">
                 remote-sensing image
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 's' and $cf007ss21 = 'e'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='s'][substring(text(),2,1)='e']">
                 cylinder
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 's' and $cf007ss21 = 'q'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='s'][substring(text(),2,1)='q']">
                 roll
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 's' and $cf007ss21 = 'g'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='s'][substring(text(),2,1)='g']">
                 sound cartridge
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 's' and $cf007ss21 = 's'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='s'][substring(text(),2,1)='s']">
                 sound cassette
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 's' and $cf007ss21 = 't'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='s'][substring(text(),2,1)='t']">
                 sound-tape reel
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 's' and $cf007ss21 = 'i'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='s'][substring(text(),2,1)='i']">
                 sound-track film
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 's' and $cf007ss21 = 'w'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='s'][substring(text(),2,1)='w']">
                 wire recording
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'f' and $cf007ss21 = 'c'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='f'][substring(text(),2,1)='c']">
                 combination
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'f' and $cf007ss21 = 'b'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='f'][substring(text(),2,1)='b']">
                 braille
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'f' and $cf007ss21 = 'a'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='f'][substring(text(),2,1)='a']">
                 moon
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'f' and $cf007ss21 = 'd'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='f'][substring(text(),2,1)='d']">
                 tactile, with no writing system
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 't' and $cf007ss21 = 'c'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='t'][substring(text(),2,1)='c']">
                 braille
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 't' and $cf007ss21 = 'a'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='t'][substring(text(),2,1)='a']">
                 regular print
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 't' and $cf007ss21 = 'd'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='t'][substring(text(),2,1)='d']">
                 text in looseleaf binder
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'v' and $cf007ss21 = 'c'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='v'][substring(text(),2,1)='c']">
                 videocartridge
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'v' and $cf007ss21 = 'f'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='v'][substring(text(),2,1)='f']">
                 videocassette
             </xsl:if>
-            <xsl:if test="$cf007ss11 = 'v' and $cf007ss21 = 'r'">
+            <xsl:if test="marc:controlfield[@tag=007][substring(text(),1,1)='v'][substring(text(),2,1)='r']">
                 videoreel
             </xsl:if>
 <!--
@@ -285,6 +284,13 @@
             </xsl:for-each>
 -->
         </xsl:variable>
+
+        <!-- Indicate if record is suppressed in OPAC -->
+        <xsl:if test="$OpacSuppression = 1">
+            <xsl:if test="marc:datafield[@tag=942][marc:subfield[@code='n'] = '1']">
+                <span class="results_summary suppressed_opac">Suppressed in OPAC</span>
+            </xsl:if>
+        </xsl:if>
 
         <!-- Title Statement: Alternate Graphic Representation (MARC 880) -->
         <xsl:if test="$display880">
@@ -934,7 +940,35 @@
             <xsl:if test="marc:subfield[@code='t']">
     <span class="results_summary source">
     <span class="label">Source: </span>
-            <xsl:value-of select="marc:subfield[@code='t']"/>
+            <xsl:choose>
+            <xsl:when test="$UseControlNumber = '1' and marc:subfield[@code='w']">
+                <xsl:variable name="f773cn">
+                    <xsl:call-template name="extractControlNumber">
+                        <xsl:with-param name="subfieldW" select="marc:subfield[@code='w']"/>
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:variable name="f773cni">
+                    <xsl:call-template name="extractControlNumberIdentifier">
+                        <xsl:with-param name="subfieldW" select="marc:subfield[@code='w']"/>
+                    </xsl:call-template>
+                </xsl:variable>
+                <a>
+                <xsl:choose>
+                    <!-- N.B. The query format has been carefully crafted to work with both Zebra and Elasticsearch... -->
+                    <xsl:when test="$f773cni != ''">
+                        <xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=Control-number,ext:"<xsl:value-of select="str:encode-uri($f773cn, true())"/>" AND cni,ext:"<xsl:value-of select="str:encode-uri($f773cni, true())"/>"</xsl:attribute>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=Control-number,ext:"<xsl:value-of select="str:encode-uri($f773cn, true())"/>" AND cni,ext:"<xsl:value-of select="str:encode-uri($controlField003, true())"/>"</xsl:attribute>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:value-of select="marc:subfield[@code='t']"/>
+                </a>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="marc:subfield[@code='t']"/>
+            </xsl:otherwise>
+            </xsl:choose>
     </span>
             </xsl:if>
         </xsl:for-each>
@@ -1012,14 +1046,6 @@
             </xsl:for-each>
         </span>
     </xsl:if>
-
-    <!-- Indicate if record is suppressed in OPAC -->
-    <xsl:if test="$OpacSuppression = 1">
-        <xsl:if test="marc:datafield[@tag=942][marc:subfield[@code='n'] = '1']">
-            <span class="results_summary suppressed_opac">Suppressed in OPAC</span>
-        </xsl:if>
-    </xsl:if>
-
 </xsl:template>
 
     <xsl:template name="nameABCQ">
@@ -1034,6 +1060,7 @@
                 </xsl:with-param>
             </xsl:call-template>
     </xsl:template>
+
     <xsl:template name="nameABCDN">
             <xsl:call-template name="chopPunctuation">
                 <xsl:with-param name="chopString">
@@ -1099,8 +1126,6 @@
                 </xsl:call-template>
         </xsl:if>
     </xsl:template>
-
-
 
     <xsl:template name="chopBrackets">
         <xsl:param name="chopString"></xsl:param>

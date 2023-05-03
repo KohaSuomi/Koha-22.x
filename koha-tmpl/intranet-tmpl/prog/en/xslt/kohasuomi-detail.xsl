@@ -178,7 +178,7 @@
             </xsl:when>
         </xsl:choose>
 
-        <!-- <xsl:call-template name="cover-image-856u"/> --> <!-- koha-suomi: cover image -->
+        <xsl:call-template name="cover-image-856u"/> <!-- koha-suomi: cover image -->
 
         <!-- Author Statement: Alternate Graphic Representation (MARC 880) -->
         <xsl:if test="$display880">
@@ -216,7 +216,7 @@
     <!-- koha-suomi: show item type from 942c -->
     <xsl:if test="marc:datafield[@tag=942]/marc:subfield[@code='c']">
       <span class="results_summary item-type">
-        <span class="label">Material type: </span>
+        <span class="label">Item type: </span>
         <xsl:value-of select="marc:datafield[@tag=942]/marc:subfield[@code='c']"/>
       </span>
     </xsl:if>
@@ -405,7 +405,7 @@
                 <xsl:with-param name="label">Edition: </xsl:with-param>
             </xsl:call-template>
         </xsl:if>
-        
+
         <xsl:if test="marc:datafield[@tag=250]">
         <span class="results_summary edition"><span class="label">Edition: </span>
             <xsl:for-each select="marc:datafield[@tag=250]">
@@ -435,7 +435,7 @@
             </xsl:call-template>
 	    <xsl:call-template name="maybe-show-f347b"/>
         </xsl:if>
-        
+
         <xsl:if test="marc:datafield[@tag=300]">
         <span class="results_summary description"><span class="label">Description: </span>
             <xsl:for-each select="marc:datafield[@tag=300]">
