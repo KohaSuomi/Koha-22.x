@@ -254,7 +254,7 @@
                 started_on: function(){
                     let now = new Date();
                     var tzoffset = (new Date()).getTimezoneOffset() * 60000;
-                    if ( $("#only_current").is(":checked") ) {
+                    if ( $("#only_current").is(":checked") && !$("#include_last_hour").is(":checked")) {
                         return 0;
                     }
                     if ( $("#include_last_hour").is(":checked") ) {
