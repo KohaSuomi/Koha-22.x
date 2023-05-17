@@ -150,6 +150,8 @@ my $builder = sub {
 	}
 
 	function click$function_name(event) {
+        
+        event.preventDefault();
 		var tag = event.data.id;
 		var data = event.data;
 		

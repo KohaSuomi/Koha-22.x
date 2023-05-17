@@ -155,6 +155,8 @@ my $builder = sub {
 	}
 
 	function click$function_name(event) {
+		
+		event.preventDefault();
 		var tag = event.data.id;
 		\$("#"+tag).next().attr('class', tag);
 		selectBox$function_name(tag);

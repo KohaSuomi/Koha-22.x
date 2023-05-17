@@ -108,6 +108,8 @@ my $builder = sub {
 	}
 
 	function Click$function_name(event) {
+		
+		event.preventDefault();
 
 		var re = /^(tag_...)/;
 	    var found = event.data.id.match(re);
