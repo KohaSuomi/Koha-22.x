@@ -199,7 +199,6 @@ sub create_input {
                 maxlength => $max_length,
                 javascript => $plugin->javascript,
                 noclick    => $plugin->noclick,
-                plugin     => $plugin->name,
             };
         } else { # warn and supply default field
             warn $plugin->errstr;

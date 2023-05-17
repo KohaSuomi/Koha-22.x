@@ -221,7 +221,7 @@
                       used
                   </p>
               [% END %]
-              <div id="outeritemblock" class="marc_editor"></div>
+              <div id="outeritemblock"></div>
           </fieldset>
         [% END %]
     [% ELSIF (AcqCreateItem == 'ordering') %]

@@ -366,7 +366,7 @@
                                 This authority is not used in any records.
                         [% END %]
                     </div>
-                    <div id="authoritytabs" class="toptabs numbered marc_editor">
+                    <div id="authoritytabs" class="toptabs numbered">
                         <div class="tab-content">
                             [% FOREACH BIG_LOO IN BIG_LOOP %]
                                 [% IF loop.first %]
@@ -558,7 +558,7 @@
                                                                     [% IF mv.noclick %]
                                                                         <a href="#" class="buttonDot tag_editor disabled" tabindex="-1" title="No popup">...</a>
                                                                     [% ELSE %]
-                                                                        <a href="#" id="buttonDot_[% mv.id | html %]" class="buttonDot tag_editor" title="Tag editor" data-plugin="[% mv.plugin | html %]">...</a>
+                                                                        <a href="#" id="buttonDot_[% mv.id | html %]" class="buttonDot tag_editor" title="Tag editor">...</a>
                                                                     [% END %]
                                                                     [% mv.javascript | $raw %]
                                                                 [% END #/IF ( mv.type == 'text1' ) %]
