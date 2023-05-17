@@ -431,8 +431,9 @@ function AddEventHandlers (oldcontrol, newcontrol, newinputid ) {
 // This function is a helper for CloneField and CloneSubfield.
 // It adds the event handlers from oldcontrol to newcontrol.
 // newinputid is the id attribute of the cloned controlling input field
-// Note: This code depends on the jQuery internal method _data which is not recommended
-    var ev = jQuery._data(oldcontrol, 'events')
+// Note: This code depends on the jQuery data for events; this structure
+// is moved to _data as of jQuery 1.8.
+    var ev= $(oldcontrol).data('events');
     if(typeof ev != 'undefined') {
         $.each(ev, function(prop,val) {
             $.each(val, function(prop2,val2) {
