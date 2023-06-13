@@ -16,7 +16,7 @@
 [% INCLUDE 'doc-head-open.inc' %]
 [% SET libraries = Branches.all %]
 [% SET categories = Categories.all.unblessed %]
-[% SET columns = ['name', 'cardnumber', 'dateofbirth', 'category', 'branch', 'address', 'phone'] %]
+[% SET columns = ['name', 'cardnumber', 'category', 'branch'] %]
 [% PROCESS "patron-search.inc" %]
 [% UNLESS ( multi_hold ) %]
     <title>Place a hold on [% INCLUDE 'biblio-title-head.inc' %] &rsaquo; Holds &rsaquo; Circulation &rsaquo; Koha</title>
