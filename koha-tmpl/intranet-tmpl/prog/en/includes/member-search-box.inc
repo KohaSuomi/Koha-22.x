@@ -49,8 +49,8 @@
                         <option value='start_with'>Starts with</option>
                         <option value='contain'>Contains</option>
                     [% ELSE %]
-                        <option value='start_with'>Starts with</option>
                         <option value='contain'>Contains</option>
+                        <option value='start_with'>Starts with</option>
                     [% END %]
                     </select>
                 </div>
