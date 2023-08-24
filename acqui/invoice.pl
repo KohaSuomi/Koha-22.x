@@ -83,7 +83,7 @@ if ( $op && $op eq 'close' ) {
     }
     my $referer = $input->param('referer');
     # KD-4349 Validate redirects
-    unless ( grep (/^\//, $referer) || grep (/^https?\/\/$staffclientbaseurl/, $referer) ) {
+    unless ( grep (/^\//, $referer) || grep (/^$staffclientbaseurl/, $referer) ) {
         $referer = 'invoices.pl';
     }
     if ($referer) {
@@ -100,7 +100,7 @@ elsif ( $op && $op eq 'reopen' ) {
     }
     my $referer = $input->param('referer');
     # KD-4349 Validate redirects
-    unless ( grep (/^\//, $referer) || grep (/^https?\/\/$staffclientbaseurl/, $referer) ) {
+    unless ( grep (/^\//, $referer) || grep (/^$staffclientbaseurl/, $referer) ) {
         $referer = 'invoices.pl';
     }
     if ($referer) {
@@ -161,7 +161,7 @@ elsif ( $op && $op eq 'delete' ) {
     defined($invoice_files) && $invoice_files->DelAllFiles();
     my $referer = $input->param('referer');
     # KD-4349 Validate redirects
-    unless ( grep (/^\//, $referer) || grep (/^https?\/\/$staffclientbaseurl/, $referer) ) {
+    unless ( grep (/^\//, $referer) || grep (/^$staffclientbaseurl/, $referer) ) {
         $referer = 'invoices.pl';
     }
     if ($referer) {

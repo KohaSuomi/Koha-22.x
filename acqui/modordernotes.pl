@@ -64,8 +64,8 @@ if($op and $op eq 'save') {
     }
     ModOrder($order);
     # KD-4349 Validate redirects
-    unless ( grep (/^\//, $referrer) || grep (/^https?:\/\/$staffclientbaseurl/, $referrer) ) {
-        $referrer="orders.pl";
+    unless ( grep (/^\//, $referrer) || grep (/^$staffclientbaseurl/, $referrer) ) {
+        $referrer="acqui-home.pl";
     }
     print $input->redirect($referrer);
     exit;
