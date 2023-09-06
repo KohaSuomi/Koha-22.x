@@ -1824,7 +1824,10 @@
                         <xsl:when test="marc:subfield[@code='e'][not(@tag=111) or not(@tag=711)]">
                             <xsl:for-each select="marc:subfield[@code='e']">
                                 <xsl:value-of select="."/>
-                                <xsl:if test="position() != last()">, </xsl:if>
+                                <xsl:if test="position() != last()">
+                                  <xsl:if test="substring(., string-length(.), 1) != ','"><xsl:text>,</xsl:text></xsl:if>
+                                  <xsl:text> </xsl:text>
+                                </xsl:if>
                             </xsl:for-each>
                         </xsl:when>
                         <xsl:otherwise>
