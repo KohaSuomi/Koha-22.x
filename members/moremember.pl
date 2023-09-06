@@ -234,7 +234,16 @@ my $balance = 0;
 $balance = $patron->account->balance;
 
 my $account = $patron->account;
-if( ( my $owing = $account->non_issues_charges ) > 0 ) {
+my $account_lines = $account->outstanding_debits;
+my $total = $account_lines->total_outstanding;
+
+$template->param(
+    total => $total,
+);
+
+my $owing = $account->non_issues_charges;
+
+if ( $total > 0 ) {
     my $noissuescharge = C4::Context->preference("noissuescharge") || 5; # FIXME If noissuescharge == 0 then 5, why??
     $template->param(
         charges => 1,
@@ -263,7 +272,6 @@ elsif ( $patron->is_going_to_expire ) {
         $template->param("returnbeforeexpiry" => 1);
     }
 }
-
 
 my $has_modifications = Koha::Patron::Modifications->search( { borrowernumber => $borrowernumber } )->count;
 
