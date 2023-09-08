@@ -207,6 +207,8 @@ sub AddBiblio {
         return;
     }
 
+    Koha::Plugins->call('automatic_frameworkcode', { 'frameworkcode' => \$frameworkcode, 'record' => $record });
+
     my $schema = Koha::Database->schema;
     my ( $biblionumber, $biblioitemnumber );
     try {
@@ -383,6 +385,7 @@ sub ModBiblio {
     my $dbh = C4::Context->dbh;
 
     $frameworkcode = "" if !$frameworkcode || $frameworkcode eq "Default"; # XXX
+    Koha::Plugins->call('automatic_frameworkcode', { 'frameworkcode' => \$frameworkcode, 'record' => $record });
 
     _strip_item_fields($record, $frameworkcode);
 
