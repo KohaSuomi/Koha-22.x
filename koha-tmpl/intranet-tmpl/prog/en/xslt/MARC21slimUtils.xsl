@@ -282,9 +282,12 @@
             </xsl:choose>
 
             <xsl:if test="$field/marc:subfield[@code='a']">
+                <a>
+                <xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=place-of-publication:<xsl:value-of select="str:encode-uri($field/marc:subfield[@code='a'], true())"/></xsl:attribute>
                 <xsl:call-template name="subfieldSelect">
                     <xsl:with-param name="codes">a</xsl:with-param>
                 </xsl:call-template>
+                </a>
             </xsl:if>
             <xsl:text> </xsl:text>
 
