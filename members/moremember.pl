@@ -213,17 +213,28 @@ my $no_issues_charge_guarantees = C4::Context->preference("NoIssuesChargeGuarant
 $no_issues_charge_guarantees = undef unless looks_like_number( $no_issues_charge_guarantees );
 if ( defined $no_issues_charge_guarantees ) {
     my $guarantees_non_issues_charges = 0;
+    my $guarantees_total_charges = 0;
     my $guarantees = $patron->guarantee_relationships->guarantees;
     while ( my $g = $guarantees->next ) {
+        
+        my $account = $g->account;
+        my $account_lines = $account->outstanding_debits;
+        my $total = $account_lines->total_outstanding;
+        
         $guarantees_non_issues_charges += $g->account->non_issues_charges;
+        $guarantees_total_charges += $total;
     }
     if ( $guarantees_non_issues_charges > $no_issues_charge_guarantees ) {
         $template->param(
             charges_guarantees    => 1,
             chargesamount_guarantees => $guarantees_non_issues_charges,
+            chargesamount_guarantees_total => $guarantees_total_charges,
         );
+        
     }
 }
+
+
 
 if ( $patron->has_overdues ) {
     $template->param( odues => 1 );
