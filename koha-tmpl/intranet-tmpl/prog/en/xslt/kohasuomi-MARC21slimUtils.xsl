@@ -281,7 +281,7 @@
         <xsl:param name="url"/>
         <xsl:variable name="ind2" select="$field/@ind2"/>
         <span>
-	    <xsl:attribute name="class"><xsl:value-of select="concat('results_summary ', 'f264 ', 'ind2-',$ind2)"/></xsl:attribute>
+	    <xsl:attribute name="class"><xsl:value-of select="concat('results_summary rda264 f264 ind2-',$ind2)"/></xsl:attribute>
             <xsl:choose>
                 <xsl:when test="$ind2='0'">
                     <span class="label">Producer: </span>
@@ -301,9 +301,12 @@
             </xsl:choose>
 
             <xsl:if test="$field/marc:subfield[@code='a']">
+                <a>
+                <xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=place-of-publication:<xsl:value-of select="str:encode-uri($field/marc:subfield[@code='a'], true())"/></xsl:attribute>
                 <xsl:call-template name="subfieldSelect">
                     <xsl:with-param name="codes">a</xsl:with-param>
                 </xsl:call-template>
+                </a>
             </xsl:if>
             <xsl:text> </xsl:text>
 
