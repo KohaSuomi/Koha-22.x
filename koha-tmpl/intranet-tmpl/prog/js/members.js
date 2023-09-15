@@ -236,6 +236,7 @@ $(document).ready(function(){
         jQuery.validator.messages.phone);
 
     $("#entryform").validate({
+        ignore: "",
         rules: {
             email: {
                 email: true
@@ -264,7 +265,23 @@ $(document).ready(function(){
             else
                 form.beenSubmitted = true;
                 form.submit();
-            }
+        },
+        invalidHandler: function(form, validator) {
+            var error_msg = jQuery.validator.messages.missing_fields;
+            // First remove error messages so that it doesn't
+            // show in fieldset without errors
+            $("fieldset").each(function(){
+                $("#"+$(this).attr("id")+"-error").remove();
+            });
+            $(validator.errorList).each(function() {
+                var fieldset = $(this.element.closest("fieldset"));
+                var fieldset_id = fieldset.attr("id");
+                //Add error message only if it doesn't already exist
+                if(!$("#"+fieldset_id+"-error").length){
+                    fieldset.find("legend").before('<span id="'+fieldset_id+'-error" class="required">'+error_msg+'</span>');
+                }
+            });
+        }
     });
 
     var mrform = $("#manual_restriction_form");
