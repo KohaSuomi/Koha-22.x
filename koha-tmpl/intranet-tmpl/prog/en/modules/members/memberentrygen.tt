@@ -1931,6 +1931,11 @@ legend:hover {
         [% END %]
         $("#guarantor_template").hide();
 
+        //Add class ignore_validation to hidden new_guarantor_relationship to ignore it when form is validated
+        if($(".new_guarantor_relationship").is(":hidden")){
+            $(".new_guarantor_relationship").addClass("ignore_validation");
+        }
+
     </script>
     [% Asset.js("js/members.js") | $raw %]
     [% Asset.js("js/messaging-preference-form.js") | $raw %]

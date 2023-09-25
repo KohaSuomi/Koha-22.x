@@ -118,6 +118,11 @@ function select_user(borrowernumber, borrower, relationship) {
         $('#guarantor_relationships').append( fieldset );
         fieldset.show();
 
+        // Remove class ignore_validation from new_guarantor_relationship to validate missing relationship value
+        if($(".new_guarantor_relationship").is(":visible")){
+            $(".new_guarantor_relationship").removeClass("ignore_validation");
+        }
+
         if ( relationship ) {
             fieldset.find('.new_guarantor_relationship').val(relationship);
         }
@@ -236,7 +241,7 @@ $(document).ready(function(){
         jQuery.validator.messages.phone);
 
     $("#entryform").validate({
-        ignore: "",
+        ignore: ".ignore_validation",
         rules: {
             email: {
                 email: true
