@@ -279,7 +279,7 @@ $(document).ready(function(){
                 $("#"+$(this).attr("id")+"-error").remove();
             });
             $(validator.errorList).each(function() {
-                var fieldset = $(this.element.closest("fieldset"));
+                var fieldset = $(this.element).parents('[id*="memberentry_"]');
                 var fieldset_id = fieldset.attr("id");
                 //Add error message only if it doesn't already exist
                 if(!$("#"+fieldset_id+"-error").length){
