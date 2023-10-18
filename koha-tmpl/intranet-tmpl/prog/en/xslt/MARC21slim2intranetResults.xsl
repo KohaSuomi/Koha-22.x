@@ -312,6 +312,9 @@
         </xsl:attribute>
         <xsl:attribute name="class">title</xsl:attribute>
 
+        <xsl:choose> <!-- koha-suomi: show title from 245, 240, or 130 -->
+        <xsl:when test="marc:datafield[@tag=245]">
+
         <xsl:if test="marc:datafield[@tag=245]">
             <xsl:for-each select="marc:datafield[@tag=245]">
                 <xsl:call-template name="subfieldSelect">
@@ -338,6 +341,45 @@
                 </xsl:for-each>
             </xsl:for-each>
         </xsl:if>
+
+        </xsl:when>
+
+        <xsl:when test="marc:datafield[@tag=240]">
+
+        <xsl:if test="marc:datafield[@tag=240]">
+            <xsl:for-each select="marc:datafield[@tag=240]">
+                <xsl:call-template name="subfieldSelect">
+                    <xsl:with-param name="codes">a</xsl:with-param>
+                </xsl:call-template>
+                <xsl:text> </xsl:text>
+                <xsl:for-each select="marc:subfield[contains('mnp', @code)]">
+                            <xsl:apply-templates/>
+                            <xsl:text> </xsl:text>
+                </xsl:for-each>
+            </xsl:for-each>
+        </xsl:if>
+
+        </xsl:when>
+
+        <xsl:when test="marc:datafield[@tag=130]">
+
+        <xsl:if test="marc:datafield[@tag=130]">
+            <xsl:for-each select="marc:datafield[@tag=130]">
+                <xsl:call-template name="subfieldSelect">
+                    <xsl:with-param name="codes">a</xsl:with-param>
+                </xsl:call-template>
+                <xsl:text> </xsl:text>
+                <xsl:for-each select="marc:subfield[contains('mnp', @code)]">
+                            <xsl:apply-templates/>
+                            <xsl:text> </xsl:text>
+                </xsl:for-each>
+            </xsl:for-each>
+        </xsl:if>
+
+        </xsl:when>
+
+        </xsl:choose>
+
     </a>
 
     <!-- Author Statement: Alternate Graphic Representation (MARC 880) -->
