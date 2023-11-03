@@ -69,13 +69,13 @@ function update_category_code(category_code) {
     $(mytables).find(" li[data-category_code='"+category_code+"']").show();
     $(mytables).find(" li[data-category_code='']").show();
 
-    // Add class ignore_validation from attribute field to ignore validation
-    if($(mytables).find("li").is(":hidden")){
-        $(mytables).find("li").children('[id*="patron_attr"]').addClass("ignore_validation");
-    }
     // Remove class ignore_validation from attribute field so it's validated
     if($(mytables).find("li").is(":visible")){
         $(mytables).find("li").children('[id*="patron_attr"]').removeClass("ignore_validation");
+    }
+    // Add class ignore_validation from attribute field to ignore validation
+    if($(mytables).find("li").is(":hidden")){
+        $(mytables).find("li").children('[id*="patron_attr"]').addClass("ignore_validation");
     }
 
     //Change password length hint
