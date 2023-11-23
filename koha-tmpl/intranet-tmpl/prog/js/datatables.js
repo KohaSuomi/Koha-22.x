@@ -887,7 +887,18 @@ jQuery.fn.dataTable.ext.errMode = function(settings, note, message) {
                         }
                     }
 
-                    $( input_type, this ).on( 'keyup change', function () {
+                    function delay(callback, ms) {
+                        var timer = 0;
+                        return function() {
+                          var context = this, args = arguments;
+                          clearTimeout(timer);
+                          timer = setTimeout(function () {
+                            callback.apply(context, args);
+                          }, ms || 0);
+                        };
+                      }
+
+                    $( input_type, this ).on( 'keyup change', (delay(function () {
                         if ( table_dt.column(i).search() !== this.value ) {
                             if ( input_type == "input" ) {
                                 table_dt
@@ -901,7 +912,7 @@ jQuery.fn.dataTable.ext.errMode = function(settings, note, message) {
                                     .draw();
                             }
                         }
-                    } );
+                    },500 )));
                 } else {
                     $(this).html('');
                 }
