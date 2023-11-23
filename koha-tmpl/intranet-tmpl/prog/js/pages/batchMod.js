@@ -117,7 +117,6 @@ function hideAllColumns() {
 }
 
 $(document).ready(function () {
-    hideColumns();
     $("#itemst").dataTable($.extend(true, {}, dataTablesDefaults, {
         "sDom": 't',
         "aoColumnDefs": [
@@ -127,6 +126,9 @@ $(document).ready(function () {
         ],
         "bPaginate": false,
     }));
+
+    hideColumns();
+
     $("#selectallbutton").click(function (e) {
         e.preventDefault();
         $("#itemst input:checkbox").each(function () {
