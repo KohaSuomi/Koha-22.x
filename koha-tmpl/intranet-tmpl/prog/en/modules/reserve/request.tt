@@ -1705,8 +1705,8 @@
             $(".cancel-hold").on("click",function(e) {
                 e.preventDefault;
                 cancel_link = $(this);
-                $('#cancelModal').modal();
-                return false;
+                var res_id = $(this).attr('reserve_id');
+                $('#cancelModal').modal('show').find('#cancelModalConfirmBtnAPI').attr("data-hold-id", res_id);
             });
             $("#cancelModalConfirmBtn").on("click",function(e) {
                 let link;
@@ -1726,6 +1726,23 @@
                 window.location.href = link;
                 return false;
             });
+            if ( $('#requestspecific').length ) {
+                $("#cancelModalConfirmBtnAPI").one("click",function(e) {
+                    e.preventDefault();
+                    var requestspecificTable = $("#requestspecific").DataTable();
+                    var hold_id = cancel_link.data('id');
+                    let reason = $("#modal-cancellation-reason").val();
+                    $.ajax({
+                        method: "DELETE",
+                        url: '/api/v1/holds/' + encodeURIComponent(hold_id),
+                        data: JSON.stringify(reason),
+                        success: function( data ){ $('#cancelModal').modal("hide"); requestSpecificTable.ajax.reload(null, false); },
+                        error: function( jqXHR, textStatus, errorThrown) {
+                            //alert('There was an error:'+textStatus+" "+errorThrown);
+                        },
+                    });
+                });
+            }
 
             [% UNLESS ( patron || patron.borrowernumber || borrowers || noitems || nobiblio ) %]
                 [% IF ( PatronAutoComplete ) %]
