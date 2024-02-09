@@ -177,9 +177,9 @@
             e.preventDefault();
             var tab = $(this).data("tab");
             var field = $(this).data("field");
-            var tablink = $("a[data-tabid='" + tab + "']" );
+            var tablink = "#tab" + tab + "XX";
             selectTab( tablink );
-            window.scrollTo( 0, getScrollto( field, "toolbar" ) );
+            setTimeout(window.scrollTo, 200, 0, getScrollto( field, "toolbar" ) );
         });
 
         $("body").on("click", ".show-errors", function(e){
