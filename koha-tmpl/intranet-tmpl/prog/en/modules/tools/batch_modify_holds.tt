@@ -48,15 +48,12 @@
                                 <div class="hint"><p>NOTE! Column patron_expiration_date is used as a main filter for expiration date field. Otherwise column expirationdate is used.</p></div>
                                 <ol>
                                     <li>
-                                        <label for="suspend_until">Expiration date:</label>
-                                        <li>
-                                            <label for="expirationdate_from">From</label>
-                                            <input type="text" size="10" id="from" name="expirationdate_from" class="flatpickr" data-date_to="to" />
-                                        </li>
-                                        <li>
-                                            <label for="expirationdate_to">To</label>
-                                            <input type="text" size="10" id="to" name="expirationdate_to" class="flatpickr"/>
-                                        </li>
+                                        <label for="expirationdate_from">Expiration date from:</label>
+                                        <input type="text" size="10" id="expirationdate_from" name="expirationdate_from" class="flatpickr" data-date_to="to" />
+                                    </li>
+                                    <li>
+                                        <label for="expirationdate_to">Expiration date to:</label>
+                                        <input type="text" size="10" id="expirationdate_to" name="expirationdate_to" class="flatpickr"/>
                                     </li>
                                     <li>
                                         <label for="branchcodes">Libraries:</label>
@@ -82,15 +79,12 @@
                                         </select>
                                     </li>
                                     <li>
-                                        <label for="suspend_until">Suspended until:</label>
-                                        <li>
-                                            <label for="suspend_until_from">From</label>
-                                            <input type="text" size="10" id="from" name="suspend_until_from" class="flatpickr" data-date_to="to" />
-                                        </li>
-                                        <li>
-                                            <label for="suspend_until_to">To</label>
-                                            <input type="text" size="10" id="to" name="suspend_until_to" class="flatpickr"/>
-                                        </li>
+                                        <label for="suspend_until_from">Suspended until from:</label>
+                                        <input type="text" size="10" id="suspend_until_from" name="suspend_until_from" class="flatpickr" data-date_to="to" />
+                                    </li>
+                                    <li>
+                                        <label for="suspend_until_to">Suspended until to:</label>
+                                        <input type="text" size="10" id="suspend_until_to" name="suspend_until_to" class="flatpickr"/>
                                     </li>
                                     <li>
                                         <label for="reservenotes">Hold note:</label>
@@ -107,7 +101,7 @@
                     [% ELSIF view == 'list' %]
                         <form action="/cgi-bin/koha/tools/batch_modify_holds.pl" method="post" id="process">
                         [% IF holds.count %]
-                            <div><p>Found [% holds.count | html %][% IF holds.count > 1 %] holds [% ELSE %] hold [% END %]to modify.</p><div>
+                            <div><p>Found [% holds.count | html %][% IF holds.count > 1 %] holds [% ELSE %] hold [% END %]to modify.</p></div>
                             <div class="page-section">
                                 <div class="btn-toolbar selections-toolbar">
                                     <a id="selectall" href="#"><i class="fa fa-check"></i> Select all</a>
@@ -119,7 +113,7 @@
                                             <th>&nbsp;</th>
                                             <th>Expiration date</th>
                                             <th>Patron expiration date</th>
-                                            <th>Title</title>
+                                            <th>Title</th>
                                             <th>Barcode</th>
                                             <th>Status</th>
                                             <th>Hold pickup library</th>
@@ -134,8 +128,8 @@
                                                 <td><input type="checkbox" name="hold_id" value="[% hold.reserve_id | html %]"/></td>
                                                 <td>[% hold.expirationdate | $KohaDates %]</td>
                                                 <td>[% hold.patron_expiration_date | $KohaDates %]</td>
-                                                <td><a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% hold.item.biblio.biblionumber | uri %]">[% hold.item.biblio.title | html %]</a></td>
-                                                <td><a href="/cgi-bin/koha/catalogue/moredetail.pl?itemnumber=[% hold.itemnumber | uri %]&biblionumber=[% hold.item.biblio.biblionumber | uri %]&bi=[% hold.item.biblio.biblionumber | uri %]#item[% hold.itemnumber | uri %]">[% hold.item.barcode | html %]</a></td>
+                                                <td><a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% hold.biblionumber | uri %]">[% hold.biblio.title | html %]</a></td>
+                                                <td><a href="/cgi-bin/koha/catalogue/moredetail.pl?itemnumber=[% hold.itemnumber | uri %]&biblionumber=[% hold.biblionumber | uri %]&bi=[% hold.biblionumber | uri %]#item[% hold.itemnumber | uri %]">[% hold.item.barcode | html %]</a></td>
                                                 <td class="found_status" data-found="[% hold.found | html %]">
                                                     [% IF hold.found == "T" %]
                                                         In transit
@@ -157,43 +151,45 @@
                                 </table> <!-- /#holds -->
                             </div> <!-- /.page-section -->
                             <h2>Modify holds</h2>
-                            <table id="hold_modifies">
-                                <thead>
-                                    <tr>
-                                        <th>New expiration date</th>
-                                        <th>New pickup library</th>
-                                        <th>Suspend holds</th>
-                                        <th>Suspend until</th>
-                                        <th>New reserve note</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <input type="text" id="new_expiration_date" name="new_expiration_date" class="flatpickr" data-flatpickr-futuredate="true"/>
-                                        </td>
-                                        <td>
-                                            <select id="new_pickup_loc" name="new_pickup_loc">
-                                                <option value="" selected="selected"></option>
-                                                [% PROCESS options_for_libraries libraries => Branches.pickup_locations(selected = "") %]
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select id="new_suspend_status" name="new_suspend_status">
-                                                <option value="" selected="selected"></option>
-                                                <option value="not_suspended">Not suspended</option>
-                                                <option value="suspend">Suspend</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" id="new_suspend_date" name="new_suspend_date" class="flatpickr" data-flatpickr-futuredate="true"/>
-                                        </td>
-                                        <td>
-                                           <input type="text" id="new_reserve_note" name="new_reserve_note"/>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table> <!-- /#hold_modifies -->
+                            <div class="page-section">
+                                <table id="hold_modifies">
+                                    <thead>
+                                        <tr>
+                                            <th>New expiration date</th>
+                                            <th>New pickup library</th>
+                                            <th>Suspend holds</th>
+                                            <th>Suspend until</th>
+                                            <th>New reserve note</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input type="text" id="new_expiration_date" name="new_expiration_date" class="flatpickr" data-flatpickr-futuredate="true"/>
+                                            </td>
+                                            <td>
+                                                <select id="new_pickup_loc" name="new_pickup_loc">
+                                                    <option value="" selected="selected"></option>
+                                                    [% PROCESS options_for_libraries libraries => Branches.pickup_locations(selected = "") %]
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select id="new_suspend_status" name="new_suspend_status">
+                                                    <option value="" selected="selected"></option>
+                                                    <option value="not_suspended">Not suspended</option>
+                                                    <option value="suspend">Suspend</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="new_suspend_date" name="new_suspend_date" class="flatpickr" data-flatpickr-futuredate="true"/>
+                                            </td>
+                                            <td>
+                                               <input type="text" id="new_reserve_note" name="new_reserve_note"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table> <!-- /#hold_modifies -->
+                            </div>
                             <fieldset class="action">
                                 <input type="hidden" name="op" value="modify"/>
                                 <input type="submit" class="btn btn-primary" value="Modify selected holds"/>
@@ -208,17 +204,15 @@
                         [% END %]
                     [% ELSIF view == 'report' %]
                         <div class="dialog message">
-                            Holds have been modified!
+                            [% updated_holds.count | html %] holds have been modified!
                         </div>
                         <div class="page-section">
-                            <div class="btn-toolbar selections-toolbar">
-                                <a id="selectall" href="#"><i class="fa fa-check"></i> Select all</a>
-                                <a id="clearall" href="#"><i class="fa fa-remove"></i> Clear all</a>
-                            </div>
                             <table id="holds">
                                 <thead>
                                     <tr>
                                         <th>Expiration date</th>
+                                        <th>Title</th>
+                                        <th>Barcode</th>
                                         <th>Hold pickup library</th>
                                         <th>Suspended</th>
                                         <th>Suspended until</th>
@@ -229,6 +223,8 @@
                                     [% FOREACH hold IN updated_holds %]
                                         <tr>
                                             <td>[% hold.expirationdate | $KohaDates %]</td>
+                                            <td><a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% hold.biblionumber | uri %]">[% hold.biblio.title | html %]</a></td>
+                                            <td><a href="/cgi-bin/koha/catalogue/moredetail.pl?itemnumber=[% hold.itemnumber | uri %]&biblionumber=[% hold.biblionumber | uri %]&bi=[% hold.biblionumber | uri %]#item[% hold.itemnumber | uri %]">[% hold.item.barcode | html %]</a></td>
                                             <td>[% Branches.GetName( hold.branchcode ) | html %]</td>
                                             <td>[% IF hold.suspend == 0 %]No[% ELSE %]Yes[% END %]</td>
                                             <td>[% hold.suspend_until | $KohaDates %]</td>
@@ -312,7 +308,7 @@
                 }
                 if( ( !new_suspend_status || new_suspend_status == "not_suspended") && new_suspend_date ){
                     e.preventDefault();
-                    alert(_('You have to suspend holds if new suspend until date is set.'));
+                    alert(_("You have to suspend holds if new suspend until date is set."));
                     return false;
                 }
 

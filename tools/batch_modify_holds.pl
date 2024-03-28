@@ -119,7 +119,7 @@ elsif ( $op eq 'list' ) {
     my $holds = Koha::Holds->search(
         $search_params,
         {
-            join => ["item"]
+            join => ["item", "biblio"]
         }
     );
 
@@ -139,7 +139,7 @@ if ( $op eq 'modify' ) {
 
     @hold_ids = $input->multi_param('hold_id');
 
-    my $holds_to_update = Koha::Holds->search( { reserve_id => { -in => \@hold_ids } } );
+    my $holds_to_update = Koha::Holds->search( { reserve_id => { -in => \@hold_ids } }, { join => [ "item", "biblio" ] } );
 
     while ( my $hold = $holds_to_update->next ) {
 
